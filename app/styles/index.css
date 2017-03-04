@@ -1,0 +1,19 @@
+.main-title {
+    font-family: "Bariol Bold";
+    text-align: center;
+    /*text-decoration: underline;*/
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+}
+
+.main-title-exc {
+    color: #dc6259;
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+}
+
+body {
+    color: #474747;
+    background-color: #efefef;
+}
+

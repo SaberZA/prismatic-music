@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <title>Prismatic!</title>    
+    <link rel="stylesheet" href="styles/milligram/dist/milligram.min.css">    
+    <link rel="stylesheet" href="styles/fonts/bariol-bold/style.css">
+    <link rel="stylesheet" href="styles/index.css">
+  </head>
+  <body ng-app="main" ng-controller="mainController">
+  <!--<body>-->
+    <h3 class="main-title">{{ title }}<span class="main-title-exc">!</span></h3>
+
+    <label for="timer">1:37</label>
+    <label for="song-name">Coldplay - Clocks</label>
+    <label for="song-length">(4:05)</label>
+
+    <hr />
+    <button class="button" value="Play"> Play</button>
+    <button name="pause">Pause</button>
+    <button name="stop">Stop</button>
+    <hr />
+    <input id="youtube-download-link" type="text" value="https://www.youtube.com/watch?v=xyd9V3GTljA">
+    <button id="download-youtube" name="download-youtube">Download</button>
+
+
+    <!--We are using node <script>document.write(process.versions.node)</script>,
+    Chrome <script>document.write(process.versions.chrome)</script>,
+    and Electron <script>document.write(process.versions.electron)</script>.-->
+
+    <script src="http://localhost:35729/livereload.js"></script>
+    <script src="lib/angular/angular.min.js" ></script>
+    <script src="components/app.js"></script>
+    <script src="components/main/mainController.js"></script>
+  </body>
+</html>
