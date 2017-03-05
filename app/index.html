@@ -16,14 +16,17 @@
     <label for="song-length">(4:05)</label>
 
     <hr />
-    <button class="button" value="Play"> Play</button>
-    <button name="pause">Pause</button>
-    <button name="stop">Stop</button>
+    <button class="button" ng-click="playMusic()">Play</button>
+    <button name="pause" ng-click="pauseMusic()">Pause</button>
+    <button name="stop" ng-click="pauseMusic()">Stop</button>
     <hr />
-    <input id="youtube-download-link" type="text" value="https://www.youtube.com/watch?v=xyd9V3GTljA">
+    <input id="youtube-download-link" ng-model="youtubeDownloadLink" type="text">
     <button id="download-youtube" name="download-youtube">Download</button>
 
-
+      <audio id="prismatic-audio" controls>
+        <source src="{{ youtubeDownloadLink }}" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
     <!--We are using node <script>document.write(process.versions.node)</script>,
     Chrome <script>document.write(process.versions.chrome)</script>,
     and Electron <script>document.write(process.versions.electron)</script>.-->
