@@ -1,39 +1,83 @@
 <!DOCTYPE html>
-<html >
-  <head>
+<html>
+
+<head>
     <meta charset="UTF-8">
-    <title>Prismatic!</title>    
-    <link rel="stylesheet" href="styles/milligram/dist/milligram.min.css">    
+    <title>Prismatic!</title>
+    <link rel="stylesheet" href="styles/milligram/dist/milligram.min.css">
     <link rel="stylesheet" href="styles/fonts/bariol-bold/style.css">
     <link rel="stylesheet" href="styles/index.css">
-  </head>
-  <body ng-app="main" ng-controller="mainController">
-  <!--<body>-->
-    <h3 class="main-title">{{ title }}<span class="main-title-exc">!</span></h3>
+</head>
 
-    <label for="timer">1:37</label>
-    <label for="song-name">Coldplay - Clocks</label>
-    <label for="song-length">(4:05)</label>
+<body ng-app="main" ng-controller="mainController">
+    <div class="container">
+        <h3 class="main-title">{{ title }}<span class="main-title-exc">!</span></h3>
+        <div class="row">
+            <div class="column column-25">
+                <a class="button button-small" ng-click="playMusic()">Play</a>
+                <a class="button button-small" ng-click="pauseMusic()">Pause</a>
+                <a class="button button-small" ng-click="pauseMusic()">Stop</a>
+            </div>
+            <div class="column column-50">
+                <label for="timer">1:37</label>
+                <label for="song-name">Coldplay - Clocks</label>
+                <label for="song-length">(4:05)</label>
+            </div>
+            <div class="column column-25">
+                <input type="text" placeholder="Search" ng-model="searchFilter">
+            </div>
+        </div>
+        <div class="visualiser">
+            <div id="info"></div>
+            <div id="visualizer_wrapper">
+                <canvas id='canvas' width="800" height="350"></canvas>
+            </div>
+        </div>
+        <!--<div class="row">
+            <div class="column">
+                <table id="song-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Track</th>
+                            <th>Duration</th>
+                            <th>Artist</th>
+                            <th>Album</th>
+                            <th>Genre</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>-->
 
-    <hr />
-    <button class="button" ng-click="playMusic()">Play</button>
-    <button name="pause" ng-click="pauseMusic()">Pause</button>
-    <button name="stop" ng-click="pauseMusic()">Stop</button>
-    <hr />
-    <input id="youtube-download-link" ng-model="youtubeDownloadLink" type="text">
-    <button id="download-youtube" name="download-youtube">Download</button>
 
-      <audio id="prismatic-audio" controls>
+
+
+        <!--<hr />
+
+        <hr />-->
+        <input id="youtube-download-link" ng-model="youtubeDownloadLink" type="text">
+        <button id="download-youtube" name="download-youtube">Download</button>
+        <!--<div id="amplitude-play-pause" class="amplitude-paused"></div>
+      <span id="amplitude-now-playing-title">Song Name</span> <span id="slash">-</span><br><span id="amplitude-now-playing-artist">Artist</span>-->
+        <!--<audio id="prismatic-audio" amplitude-artist="Amplitude Artist" amplitude-title="Amplitude Title" amplitude-album-art-url="path/to/album-art.jpg" amplitude-album="Ampltude Album" amplitude-audio-type="song">-->
+        <audio id="prismatic-audio" controls style="display: none">
         <source src="{{ youtubeDownloadLink }}" type="audio/mpeg">
         Your browser does not support the audio element.
       </audio>
-    <!--We are using node <script>document.write(process.versions.node)</script>,
+        <!--We are using node <script>document.write(process.versions.node)</script>,
     Chrome <script>document.write(process.versions.chrome)</script>,
     and Electron <script>document.write(process.versions.electron)</script>.-->
+    </div>
+    <!--<body>-->
+
 
     <script src="http://localhost:35729/livereload.js"></script>
-    <script src="lib/angular/angular.min.js" ></script>
+    <script src="lib/angular/angular.min.js"></script>
     <script src="components/app.js"></script>
     <script src="components/main/mainController.js"></script>
-  </body>
+    <script src="lib/amplitude/amplitude.min.js"></script>
+    <script type="text/javascript" src="lib/html5-audio-visualizer/html5-audio-visualizer.js"></script>
+</body>
+
 </html>
