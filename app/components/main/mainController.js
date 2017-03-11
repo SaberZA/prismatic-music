@@ -26,6 +26,24 @@ angular.module('main')
             visuals._visualize();
         };
 
+        $scope.updatePlayTimer = function(currentTime, duration) {
+            var timeSeconds = Math.floor(currentTime % 60);
+            var timeMinutes = Math.floor(currentTime / 60);
+
+            var durationSeconds = Math.floor(duration % 60);
+            var durationMinutes = Math.floor(duration / 60);
+
+            var timeLabel = timeMinutes + ":" + timeSeconds;
+            var durationLabel = durationMinutes + ":" + durationSeconds;
+
+            $scope.currentTimer = timeLabel + " / " + durationLabel;
+            $scope.$apply();
+        };
+
+        audio.addEventListener("timeupdate", function() {
+            $scope.updatePlayTimer(Math.floor(audio.currentTime), Math.floor(audio.duration));
+        });
+
         $scope.volume = 80;
 
         $scope.$watch('volume', function(newValue, oldValue) {

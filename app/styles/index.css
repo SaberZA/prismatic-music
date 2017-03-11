@@ -32,3 +32,7 @@ body {
     background-color: white;
     padding: 5px;
 }
+
+.volume-control {
+    width: 100px;
+}

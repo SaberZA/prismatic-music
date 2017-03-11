@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="styles/milligram/dist/milligram.min.css">
     <link rel="stylesheet" href="styles/fonts/bariol-bold/style.css">
     <link rel="stylesheet" href="styles/index.css">
+    <link rel="stylesheet" href="styles/volume-control.css">
+    <link rel="stylesheet" href="styles/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="styles/font-awesome/css/font-awesome.min.css">
 </head>
 
 <body ng-app="main" ng-controller="mainController">
@@ -27,15 +30,16 @@
                 <input type="text" placeholder="Search" ng-model="searchFilter">
             </div>
         </div>
+        <div id="info" class="ng-cloak">{{ currentTimer }}</div>
         <div class="visualiser">
-            <div id="info"></div>
+
             <div id="visualizer_wrapper">
                 <canvas id='canvas' width="150" height="75"></canvas>
             </div>
         </div>
 
         <div class="volume-control">
-            <input type="text" ng-model="volume">
+            <input type="range" ng-model="volume">
         </div>
         <!--<div class="row">
             <div class="column">
@@ -65,10 +69,10 @@
         <!--<div id="amplitude-play-pause" class="amplitude-paused"></div>
       <span id="amplitude-now-playing-title">Song Name</span> <span id="slash">-</span><br><span id="amplitude-now-playing-artist">Artist</span>-->
         <!--<audio id="prismatic-audio" amplitude-artist="Amplitude Artist" amplitude-title="Amplitude Title" amplitude-album-art-url="path/to/album-art.jpg" amplitude-album="Ampltude Album" amplitude-audio-type="song">-->
-        <audio id="prismatic-audio" controls style="display: none">
-        <source src="{{ youtubeDownloadLink }}" type="audio/mpeg">
-        Your browser does not support the audio element.
-      </audio>
+        <audio id="prismatic-audio" controls style="display: none" ng-ontimeupdate="updatePlayTimer(Math.floor(this.currentTime) + ' / ' + Math.floor(this.duration))">
+            <source src="{{ youtubeDownloadLink }}" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
         <!--We are using node <script>document.write(process.versions.node)</script>,
     Chrome <script>document.write(process.versions.chrome)</script>,
     and Electron <script>document.write(process.versions.electron)</script>.-->
