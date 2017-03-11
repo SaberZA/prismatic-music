@@ -1,28 +1,24 @@
+var padLeft = require('pad-left');
+
 angular.module('main')
     .controller('mainController', ['$scope', function MainController($scope) {
-        // Tail = require('tail').Tail;
-
-        // tail = new Tail("./app.log");
-
-        // tail.on("line", function(data) {
-        //     console.log(data);
-        // });
-
-        // tail.on("error", function(error) {
-        //     console.log('ERROR: ', error);
-        // });
 
         var audio = document.getElementById('prismatic-audio');
 
         $scope.title = 'Prismatic Player';
         $scope.youtubeDownloadLink = 'music/anime.mp3';
+        $scope.songName = "...";
+        $scope.currentTimer = "00:00";
+
+        var visuals = new Visualizer();
+        visuals.ini();
 
         $scope.playMusic = function() {
             audio.load();
             audio.play();
+            $scope.songName = $scope.youtubeDownloadLink;
 
-            var visuals = new Visualizer();
-            visuals.ini();
+
             visuals._visualize();
         };
 
@@ -33,7 +29,7 @@ angular.module('main')
             var durationSeconds = Math.floor(duration % 60);
             var durationMinutes = Math.floor(duration / 60);
 
-            var timeLabel = timeMinutes + ":" + timeSeconds;
+            var timeLabel = timeMinutes + ":" + padLeft(timeSeconds, 2, '0');
             var durationLabel = durationMinutes + ":" + durationSeconds;
 
             $scope.currentTimer = timeLabel + " / " + durationLabel;

@@ -9,28 +9,47 @@
     <link rel="stylesheet" href="styles/index.css">
     <link rel="stylesheet" href="styles/volume-control.css">
     <link rel="stylesheet" href="styles/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="styles/font-awesome/css/font-awesome.min.css">
 </head>
 
 <body ng-app="main" ng-controller="mainController">
     <div class="container">
         <h3 class="main-title">{{ title }}<span class="main-title-exc">!</span></h3>
-        <div class="row">
+        <div class="row headerRow">
             <div class="column column-25">
-                <a class="button button-small" ng-click="playMusic()">Play</a>
+                <i class="fa fa-backward" aria-hidden="true"></i>
+                <i class="fa fa-play play-control" aria-hidden="true" ng-click="playMusic()"></i>
+                <i class="fa fa-pause play-control" aria-hidden="true" ng-click="pauseMusic()"></i>
+                <i class="fa fa-stop play-control" aria-hidden="true" ng-click="pauseMusic()"></i>
+                <i class="fa fa-forward" aria-hidden="true"></i>
+                <i class="fa fa-volume-up" aria-hidden="true"></i>
+                <!--<a class="button button-small" ng-click="playMusic()">Play</a>
                 <a class="button button-small" ng-click="pauseMusic()">Pause</a>
-                <a class="button button-small" ng-click="pauseMusic()">Stop</a>
+                <a class="button button-small" ng-click="pauseMusic()">Stop</a>-->
             </div>
             <div class="column column-50">
-                <label for="timer">1:37</label>
-                <label for="song-name">Coldplay - Clocks</label>
-                <label for="song-length">(4:05)</label>
+                <div class="row">
+                    <div class="column column-25">
+                        <i class="fa fa-repeat" aria-hidden="true"></i>
+                        <i class="fa fa-random" aria-hidden="true"></i>
+                    </div>
+                    <div class="column column-50 song-name">
+                        <label for="song-name">{{ songName }}</label>
+                    </div>
+                    <div class="column column-25">
+                        <div id="info" class="ng-cloak">{{ currentTimer }}</div>
+                    </div>
+                </div>
             </div>
-            <div class="column column-25">
+            <div class="column column-5">
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </div>
+            <div class="column column-20">
                 <input type="text" placeholder="Search" ng-model="searchFilter">
             </div>
         </div>
-        <div id="info" class="ng-cloak">{{ currentTimer }}</div>
+
+
+
         <div class="visualiser">
 
             <div id="visualizer_wrapper">
@@ -82,6 +101,7 @@
 
     <script src="http://localhost:35729/livereload.js"></script>
     <script src="lib/angular/angular.min.js"></script>
+    <script src="../node_modules/pad-left/index.js"></script>
     <script src="components/app.js"></script>
     <script src="components/main/mainController.js"></script>
     <script src="lib/amplitude/amplitude.min.js"></script>

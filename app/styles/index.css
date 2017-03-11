@@ -36,3 +36,19 @@ body {
 .volume-control {
     width: 100px;
 }
+
+.play-control {
+    cursor: pointer;
+}
+
+.headerRow>div.column {
+    padding-top: 8px;
+}
+
+.headerRow>div.column:last-child {
+    padding-top: 0px;
+}
+
+.song-name {
+    text-align: center;
+}
