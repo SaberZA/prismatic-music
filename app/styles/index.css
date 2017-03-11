@@ -7,7 +7,8 @@
 }
 
 .main-title-exc {
-    color: #dc6259;
+    color: #ca72ff;
+    /*color: #dc6259;*/
     -webkit-user-select: none;
     -webkit-app-region: drag;
 }

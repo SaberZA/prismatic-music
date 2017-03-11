@@ -40,56 +40,6 @@ Visualizer.prototype = {
         var that = this,
             audioInput = document.getElementById('uploadedFile'),
             dropContainer = document.getElementsByTagName("canvas")[0];
-        //listen the file upload
-        // audioInput.onchange = function() {
-        //     if (that.audioContext === null) { return; };
-
-        //     //the if statement fixes the file selction cancle, because the onchange will trigger even the file selection been canceled
-        //     if (audioInput.files.length !== 0) {
-        //         //only process the first file
-        //         that.file = audioInput.files[0];
-        //         that.fileName = that.file.name;
-        //         if (that.status === 1) {
-        //             //the sound is still playing but we upload another file, so set the forceStop flag to true
-        //             that.forceStop = true;
-        //         };
-        //         document.getElementById('fileWrapper').style.opacity = 1;
-        //         that._updateInfo('Uploading', true);
-        //         //once the file is ready,start the visualizer
-        //         that._start();
-        //     };
-        // };
-        //listen the drag & drop
-        // dropContainer.addEventListener("dragenter", function() {
-        //     document.getElementById('fileWrapper').style.opacity = 1;
-        //     that._updateInfo('Drop it on the page', true);
-        // }, false);
-        // dropContainer.addEventListener("dragover", function(e) {
-        //     e.stopPropagation();
-        //     e.preventDefault();
-        //     //set the drop mode
-        //     e.dataTransfer.dropEffect = 'copy';
-        // }, false);
-        // dropContainer.addEventListener("dragleave", function() {
-        //     document.getElementById('fileWrapper').style.opacity = 0.2;
-        //     that._updateInfo(that.info, false);
-        // }, false);
-        // dropContainer.addEventListener("drop", function(e) {
-        //     e.stopPropagation();
-        //     e.preventDefault();
-        //     if (that.audioContext === null) { return; };
-        //     document.getElementById('fileWrapper').style.opacity = 1;
-        //     that._updateInfo('Uploading', true);
-        //     //get the dropped file
-        //     that.file = e.dataTransfer.files[0];
-        //     if (that.status === 1) {
-        //         document.getElementById('fileWrapper').style.opacity = 1;
-        //         that.forceStop = true;
-        //     };
-        //     that.fileName = that.file.name;
-        //     //once the file is ready,start the visualizer
-        //     that._start();
-        // }, false);
     },
     _start: function() {
         //read and decode the file into audio array buffer
@@ -120,13 +70,8 @@ Visualizer.prototype = {
         fr.readAsArrayBuffer(file);
     },
     _visualize: function(audioContext, buffer) {
-        // var audioContext = new AudioContext();
-        // var audioBufferSouceNode = audioContext.createBufferSource(),
-        //     analyser = audioContext.createAnalyser(),
-        //     that = this;
         var context = new AudioContext();
         var analyser = context.createAnalyser();
-        // var audio = $('#prismatic-audio');
         var audio = document.getElementById('prismatic-audio')
 
         var source = context.createMediaElementSource(audio);
@@ -163,21 +108,33 @@ Visualizer.prototype = {
         this._drawSpectrum(analyser);
     },
     _drawSpectrum: function(analyser) {
+
         var that = this,
             canvas = document.getElementById('canvas'),
             cwidth = canvas.width,
             cheight = canvas.height - 2,
-            meterWidth = 10, //width of the meters in the spectrum
-            gap = 2, //gap between meters
+            newHeight = cheight,
+            meterWidth = 5, //width of the meters in the spectrum
+            gap = function() {
+                return meterWidth / 5 + 1; //gap between meters  
+            },
             capHeight = 2,
             capStyle = '#fff',
-            meterNum = 800 / (10 + 2), //count of the meters
+            meterNum = function() {
+                return canvas.width / (meterWidth + 2); //count of the meters
+            },
             capYPositionArray = []; ////store the vertical position of hte caps for the preivous frame
         ctx = canvas.getContext('2d'),
-            gradient = ctx.createLinearGradient(0, 0, 0, 300);
-        gradient.addColorStop(1, '#0f0');
-        gradient.addColorStop(0.5, '#ff0');
-        gradient.addColorStop(0, '#f00');
+            gradient = ctx.createLinearGradient(0, 0, 0, newHeight); //x , y , canvasWidth, canvasHeight
+        // gradient.addColorStop(1, '#0f0');
+        // gradient.addColorStop(0.5, '#ff0');
+        // gradient.addColorStop(0, '#f00');
+        // gradient.addColorStop(0, '#8ED6FF');
+        // // dark blue
+        // gradient.addColorStop(1, '#004CB3');
+        gradient.addColorStop(0, '#ca72ff');
+        // dark blue
+        gradient.addColorStop(1, '#8440ad');;;
         var drawMeter = function() {
             var array = new Uint8Array(analyser.frequencyBinCount);
             analyser.getByteFrequencyData(array);
@@ -195,23 +152,32 @@ Visualizer.prototype = {
                     return;
                 };
             };
-            var step = Math.round(array.length / meterNum); //sample limited data from the total array
-            ctx.clearRect(0, 0, cwidth, cheight);
-            for (var i = 0; i < meterNum; i++) {
+            var step = Math.round(array.length / meterNum()); //sample limited data from the total array
+            ctx.clearRect(0, 0, cwidth, newHeight);
+            for (var i = 0; i < meterNum(); i++) {
                 var value = array[i * step];
-                if (capYPositionArray.length < Math.round(meterNum)) {
+                if (capYPositionArray.length < Math.round(meterNum())) {
                     capYPositionArray.push(value);
                 };
-                ctx.fillStyle = capStyle;
-                //draw the cap, with transition effect
-                if (value < capYPositionArray[i]) {
-                    ctx.fillRect(i * 12, cheight - (--capYPositionArray[i]), meterWidth, capHeight);
-                } else {
-                    ctx.fillRect(i * 12, cheight - value, meterWidth, capHeight);
-                    capYPositionArray[i] = value;
-                };
+                // ctx.fillStyle = capStyle;
+                // // draw the cap, with transition effect
+                // if (value < capYPositionArray[i]) {
+                //     ctx.fillRect(i * 12, newHeight - (--capYPositionArray[i]), meterWidth, capHeight);
+                // } else {
+                //     ctx.fillRect(i * 12, newHeight - value, meterWidth, capHeight);
+                //     capYPositionArray[i] = value;
+                // };
                 ctx.fillStyle = gradient; //set the filllStyle to gradient for a better look
-                ctx.fillRect(i * 12 /*meterWidth+gap*/ , cheight - value + capHeight, meterWidth, cheight); //the meter
+
+                // var barHeight = newHeight - value + capHeight;
+                // var canvasBarHeightDifference = canvas.height - barHeight;
+
+                // barHeight = canvasBarHeightDifference > 0 ? barHeight - canvasBarHeightDifference : barHeight;
+
+                var barHeightPercentage = (value / 255.00);
+                var barHeight = barHeightPercentage * newHeight;
+
+                ctx.fillRect(i * (meterWidth + gap()), newHeight - barHeight, meterWidth, newHeight); //the meter (x, y, width, height)
             }
             that.animationId = requestAnimationFrame(drawMeter);
         }

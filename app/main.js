@@ -10,7 +10,7 @@ let win
 function createWindow() {
     // Create the browser window.
     win = new BrowserWindow({
-        width: 850,
+        width: 900,
         height: 600,
         titleBarStyle: 'hidden-inset',
         frame: false

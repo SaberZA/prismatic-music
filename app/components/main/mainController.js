@@ -15,7 +15,7 @@ angular.module('main')
         var audio = document.getElementById('prismatic-audio');
 
         $scope.title = 'Prismatic Player';
-        $scope.youtubeDownloadLink = 'music/hiphop.mp3';
+        $scope.youtubeDownloadLink = 'music/anime.mp3';
 
         $scope.playMusic = function() {
             audio.load();
@@ -25,6 +25,13 @@ angular.module('main')
             visuals.ini();
             visuals._visualize();
         };
+
+        $scope.volume = 80;
+
+        $scope.$watch('volume', function(newValue, oldValue) {
+            audio.volume = newValue / 100.00;
+        });
+
 
         $scope.pauseMusic = function() {
             audio.pause();
