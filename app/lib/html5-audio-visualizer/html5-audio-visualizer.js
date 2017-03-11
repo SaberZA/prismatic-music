@@ -41,34 +41,6 @@ Visualizer.prototype = {
             audioInput = document.getElementById('uploadedFile'),
             dropContainer = document.getElementsByTagName("canvas")[0];
     },
-    _start: function() {
-        //read and decode the file into audio array buffer
-        var that = this,
-            file = this.file,
-            fr = new FileReader();
-        fr.onload = function(e) {
-            var fileResult = e.target.result;
-            var audioContext = that.audioContext;
-            if (audioContext === null) {
-                return;
-            };
-            that._updateInfo('Decoding the audio', true);
-            audioContext.decodeAudioData(fileResult, function(buffer) {
-                that._updateInfo('Decode succussfully,start the visualizer', true);
-                that._visualize(audioContext, buffer);
-            }, function(e) {
-                that._updateInfo('!Fail to decode the file', false);
-                console.error(e);
-            });
-        };
-        fr.onerror = function(e) {
-            that._updateInfo('!Fail to read the file', false);
-            console.error(e);
-        };
-        //assign the file to the reader
-        this._updateInfo('Starting read the file', true);
-        fr.readAsArrayBuffer(file);
-    },
     _visualize: function(audioContext, buffer) {
         var context = new AudioContext();
         var analyser = context.createAnalyser();
@@ -78,33 +50,6 @@ Visualizer.prototype = {
         source.connect(analyser);
         analyser.connect(context.destination);
         this.status = 1;
-        //connect the source to the analyser
-        // audioBufferSouceNode.connect(analyser);
-        //connect the analyser to the destination(the speaker), or we won't hear the sound
-        // analyser.connect(audioContext.destination);
-        //then assign the buffer to the buffer source node
-        // audioBufferSouceNode.buffer = buffer;
-        //play the source
-        // if (!audioBufferSouceNode.start) {
-        //     audioBufferSouceNode.start = audioBufferSouceNode.noteOn //in old browsers use noteOn method
-        //     audioBufferSouceNode.stop = audioBufferSouceNode.noteOff //in old browsers use noteOff method
-        // };
-        //stop the previous sound if any
-        // if (this.animationId !== null) {
-        //     cancelAnimationFrame(this.animationId);
-        // }
-        // if (this.source !== null) {
-        //     this.source.stop(0);
-        // }
-        // audioBufferSouceNode.start(0);
-        // this.status = 1;
-        // this.source = audioBufferSouceNode;
-        // audioBufferSouceNode.onended = function() {
-        //     that._audioEnd(that);
-        // };
-        // this._updateInfo('Playing ' + this.fileName, false);
-        // this.info = 'Playing ' + this.fileName;
-        // document.getElementById('fileWrapper').style.opacity = 0.2;
         this._drawSpectrum(analyser);
     },
     _drawSpectrum: function(analyser) {
@@ -114,24 +59,18 @@ Visualizer.prototype = {
             cwidth = canvas.width,
             cheight = canvas.height - 2,
             newHeight = cheight,
-            meterWidth = 5, //width of the meters in the spectrum
+            meterWidth = 10, //width of the meters in the spectrum
             gap = function() {
                 return meterWidth / 5 + 1; //gap between meters  
             },
-            capHeight = 2,
+            capHeight = 0,
             capStyle = '#fff',
             meterNum = function() {
-                return canvas.width / (meterWidth + 2); //count of the meters
+                return Math.floor(canvas.width / (meterWidth + 2)); //count of the meters - only need 70%
             },
             capYPositionArray = []; ////store the vertical position of hte caps for the preivous frame
         ctx = canvas.getContext('2d'),
             gradient = ctx.createLinearGradient(0, 0, 0, newHeight); //x , y , canvasWidth, canvasHeight
-        // gradient.addColorStop(1, '#0f0');
-        // gradient.addColorStop(0.5, '#ff0');
-        // gradient.addColorStop(0, '#f00');
-        // gradient.addColorStop(0, '#8ED6FF');
-        // // dark blue
-        // gradient.addColorStop(1, '#004CB3');
         gradient.addColorStop(0, '#ca72ff');
         // dark blue
         gradient.addColorStop(1, '#8440ad');;;
@@ -154,7 +93,7 @@ Visualizer.prototype = {
             };
             var step = Math.round(array.length / meterNum()); //sample limited data from the total array
             ctx.clearRect(0, 0, cwidth, newHeight);
-            for (var i = 0; i < meterNum(); i++) {
+            for (var i = 0; i < meterNum() - 8; i++) {
                 var value = array[i * step];
                 if (capYPositionArray.length < Math.round(meterNum())) {
                     capYPositionArray.push(value);
@@ -168,12 +107,6 @@ Visualizer.prototype = {
                 //     capYPositionArray[i] = value;
                 // };
                 ctx.fillStyle = gradient; //set the filllStyle to gradient for a better look
-
-                // var barHeight = newHeight - value + capHeight;
-                // var canvasBarHeightDifference = canvas.height - barHeight;
-
-                // barHeight = canvasBarHeightDifference > 0 ? barHeight - canvasBarHeightDifference : barHeight;
-
                 var barHeightPercentage = (value / 255.00);
                 var barHeight = barHeightPercentage * newHeight;
 

@@ -16,27 +16,56 @@
         <h3 class="main-title">{{ title }}<span class="main-title-exc">!</span></h3>
         <div class="row headerRow">
             <div class="column column-25">
-                <i class="fa fa-backward" aria-hidden="true"></i>
-                <i class="fa fa-play play-control" aria-hidden="true" ng-click="playMusic()"></i>
-                <i class="fa fa-pause play-control" aria-hidden="true" ng-click="pauseMusic()"></i>
-                <i class="fa fa-stop play-control" aria-hidden="true" ng-click="pauseMusic()"></i>
-                <i class="fa fa-forward" aria-hidden="true"></i>
-                <i class="fa fa-volume-up" aria-hidden="true"></i>
-                <!--<a class="button button-small" ng-click="playMusic()">Play</a>
-                <a class="button button-small" ng-click="pauseMusic()">Pause</a>
-                <a class="button button-small" ng-click="pauseMusic()">Stop</a>-->
+                <div class="row">
+                    <div class="column column-100">
+                        <i class="fa fa-backward" aria-hidden="true"></i>
+                        <i class="fa fa-play play-control" aria-hidden="true" ng-class="playStatus()" ng-click="playMusic()"></i>
+                        <i class="fa fa-pause play-control" aria-hidden="true" ng-click="pauseMusic()"></i>
+                        <i class="fa fa-stop play-control" aria-hidden="true" ng-click="pauseMusic()"></i>
+                        <i class="fa fa-forward" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column column-10">
+                        <i class="fa fa-volume-up play-control" ng-class="mutedStatus()" aria-hidden="true" ng-click="mute()"></i>
+                    </div>
+                    <div class="column column-90">
+                        <div class="volume-control">
+                            <input type="range" ng-model="volume">
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="column column-50">
                 <div class="row">
                     <div class="column column-25">
-                        <i class="fa fa-repeat" aria-hidden="true"></i>
-                        <i class="fa fa-random" aria-hidden="true"></i>
+                        <div class="column">
+                            <i class="fa fa-repeat" aria-hidden="true"></i>
+                            <i class="fa fa-random" aria-hidden="true"></i>
+                        </div>
                     </div>
                     <div class="column column-50 song-name">
-                        <label for="song-name">{{ songName }}</label>
+                        <div class="column">
+                            <label for="song-name">{{ songName }}</label>
+                        </div>
+                    </div>
+                    <div class="column column-25 songTimer">
+                        <div id="info">{{ currentTimer }}</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column column-25">
+                        <div class="visualiser">
+                            <div id="visualizer_wrapper">
+                                <canvas id="canvas" height="75"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column column-50">
+                        <input type="range" ng-model="_time" ng-mousedown="startSeek()" ng-change="seek()" ng-model-options="{ getterSetter: true, debounce: 400  }" min="0" max="{{durationInSeconds}}">
                     </div>
                     <div class="column column-25">
-                        <div id="info" class="ng-cloak">{{ currentTimer }}</div>
+
                     </div>
                 </div>
             </div>
@@ -47,19 +76,10 @@
                 <input type="text" placeholder="Search" ng-model="searchFilter">
             </div>
         </div>
+        <hr />
 
 
 
-        <div class="visualiser">
-
-            <div id="visualizer_wrapper">
-                <canvas id='canvas' width="150" height="75"></canvas>
-            </div>
-        </div>
-
-        <div class="volume-control">
-            <input type="range" ng-model="volume">
-        </div>
         <!--<div class="row">
             <div class="column">
                 <table id="song-table">
@@ -88,7 +108,8 @@
         <!--<div id="amplitude-play-pause" class="amplitude-paused"></div>
       <span id="amplitude-now-playing-title">Song Name</span> <span id="slash">-</span><br><span id="amplitude-now-playing-artist">Artist</span>-->
         <!--<audio id="prismatic-audio" amplitude-artist="Amplitude Artist" amplitude-title="Amplitude Title" amplitude-album-art-url="path/to/album-art.jpg" amplitude-album="Ampltude Album" amplitude-audio-type="song">-->
-        <audio id="prismatic-audio" controls style="display: none" ng-ontimeupdate="updatePlayTimer(Math.floor(this.currentTime) + ' / ' + Math.floor(this.duration))">
+        <audio id="prismatic-audio" controls style="display: none">
+        <!--<audio id="prismatic-audio" controls style="display: none" ng-ontimeupdate="updatePlayTimer(Math.floor(this.currentTime) + ' / ' + Math.floor(this.duration))">-->
             <source src="{{ youtubeDownloadLink }}" type="audio/mpeg">
             Your browser does not support the audio element.
         </audio>
