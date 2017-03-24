@@ -16,7 +16,8 @@ input[type=range]::-webkit-slider-runnable-track {
     cursor: pointer;
     animate: 0.2s;
     box-shadow: 0px 0px 0px #000000;
-    background: #E3E3E3;
+    /*background: #E3E3E3;*/
+    /*background: linear-gradient(to right, #ca72ff 50%, #E3E3E3 50%);*/
     border-radius: 1px;
     border: 0px solid #000000;
 }
@@ -27,7 +28,7 @@ input[type=range]::-webkit-slider-thumb {
     height: 18px;
     width: 18px;
     border-radius: 25px;
-    background: #FFFFFF;
+    background: linear-gradient(to bottom, #9b4dca, #ca72ff);
     cursor: pointer;
     -webkit-appearance: none;
     margin-top: -7px;

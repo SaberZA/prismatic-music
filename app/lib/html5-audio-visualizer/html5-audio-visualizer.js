@@ -18,6 +18,7 @@ var Visualizer = function() {
     this.status = 0; //flag for sound is playing 1 or stopped 0
     this.forceStop = false;
     this.allCapsReachBottom = false;
+    this.analyser = null;
 };
 Visualizer.prototype = {
     ini: function() {
@@ -31,6 +32,12 @@ Visualizer.prototype = {
         window.cancelAnimationFrame = window.cancelAnimationFrame || window.webkitCancelAnimationFrame || window.mozCancelAnimationFrame || window.msCancelAnimationFrame;
         try {
             this.audioContext = new AudioContext();
+            this.analyser = this.audioContext.createAnalyser();
+            var audio = document.getElementById('prismatic-audio')
+
+            this.source = this.audioContext.createMediaElementSource(audio);
+            this.source.connect(this.analyser);
+            this.analyser.connect(this.audioContext.destination);
         } catch (e) {
             this._updateInfo('!Your browser does not support AudioContext', false);
             console.log(e);
@@ -42,15 +49,8 @@ Visualizer.prototype = {
             dropContainer = document.getElementsByTagName("canvas")[0];
     },
     _visualize: function(audioContext, buffer) {
-        var context = new AudioContext();
-        var analyser = context.createAnalyser();
-        var audio = document.getElementById('prismatic-audio')
-
-        var source = context.createMediaElementSource(audio);
-        source.connect(analyser);
-        analyser.connect(context.destination);
         this.status = 1;
-        this._drawSpectrum(analyser);
+        this._drawSpectrum(this.analyser);
     },
     _drawSpectrum: function(analyser) {
 

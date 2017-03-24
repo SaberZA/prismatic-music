@@ -17,11 +17,11 @@
         <div class="row headerRow">
             <div class="column column-25">
                 <div class="row">
-                    <div class="column column-100">
+                    <div class="column column-100" class="preventSelection" unselectable="on" onselectstart="return false;" onmousedown="return false;">
                         <i class="fa fa-backward" aria-hidden="true"></i>
-                        <i class="fa fa-play play-control" aria-hidden="true" ng-class="playStatus()" ng-click="playMusic()"></i>
-                        <i class="fa fa-pause play-control" aria-hidden="true" ng-click="pauseMusic()"></i>
-                        <i class="fa fa-stop play-control" aria-hidden="true" ng-click="pauseMusic()"></i>
+                        <i class="fa fa-play play-control" aria-hidden="true" ng-show="!isPlaying" ng-class="playStatus()" ng-click="playMusic()"></i>
+                        <i class="fa fa-pause play-control" aria-hidden="true" ng-show="isPlaying" ng-click="pauseMusic()"></i>
+                        <!--<i class="fa fa-stop play-control" aria-hidden="true" ng-click="pauseMusic()"></i>-->
                         <i class="fa fa-forward" aria-hidden="true"></i>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                     </div>
                     <div class="column column-90">
                         <div class="volume-control">
-                            <input type="range" ng-model="volume">
+                            <input class="default-track" type="range" ng-model="volume">
                         </div>
                     </div>
                 </div>
@@ -62,7 +62,7 @@
                         </div>
                     </div>
                     <div class="column column-50">
-                        <input type="range" ng-model="_time" ng-mousedown="startSeek()" ng-change="seek()" ng-model-options="{ getterSetter: true, debounce: 400  }" min="0" max="{{durationInSeconds}}">
+                        <input id="inputTimeTracker" type="range" class="custom-track" ng-model="_time" ng-style="{ background: updateProgressBarStyle() }" ng-mousedown="startSeek()" ng-change="seek()" ng-model-options="{ debounce: 400  }" min="0" max="{{durationInSeconds}}">
                     </div>
                     <div class="column column-25">
 
@@ -78,9 +78,7 @@
         </div>
         <hr />
 
-
-
-        <!--<div class="row">
+        <div class="row">
             <div class="column">
                 <table id="song-table">
                     <thead>
@@ -93,9 +91,19 @@
                             <th>Genre</th>
                         </tr>
                     </thead>
+                    <tbody>
+                        <tr ng-repeat="song in songList">
+                            <td></td>
+                            <td class="playable" ng-click="setSong(song.track)">{{ song.track }}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
-        </div>-->
+        </div>
 
 
 
