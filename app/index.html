@@ -18,11 +18,14 @@
             <div class="column column-25">
                 <div class="row">
                     <div class="column column-100" class="preventSelection" unselectable="on" onselectstart="return false;" onmousedown="return false;">
-                        <i class="fa fa-backward" aria-hidden="true"></i>
-                        <i class="fa fa-play play-control" aria-hidden="true" ng-show="!isPlaying" ng-class="playStatus()" ng-click="playMusic()"></i>
-                        <i class="fa fa-pause play-control" aria-hidden="true" ng-show="isPlaying" ng-click="pauseMusic()"></i>
-                        <!--<i class="fa fa-stop play-control" aria-hidden="true" ng-click="pauseMusic()"></i>-->
-                        <i class="fa fa-forward" aria-hidden="true"></i>
+                        <div class="row">
+                            <i class="column column-10" aria-hidden="true"></i>
+                            <i class="column column-10 fa fa-backward play-control" aria-hidden="true"></i>
+                            <i class="column column-10 fa fa-play play-control" aria-hidden="true" ng-show="!isPlaying" ng-class="playStatus()" ng-click="playMusic()"></i>
+                            <i class="column column-10 fa fa-pause play-control" aria-hidden="true" ng-show="isPlaying" ng-click="pauseMusic()"></i>
+                            <i class="column column-10 fa fa-forward play-control" aria-hidden="true"></i>
+                            <div class="column column-5"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
@@ -78,6 +81,9 @@
         </div>
         <hr />
 
+
+    </div>
+    <div class="music-explorer preventSelection">
         <div class="row">
             <div class="column">
                 <table id="song-table">
@@ -94,7 +100,7 @@
                     <tbody>
                         <tr ng-repeat="song in songList">
                             <td></td>
-                            <td class="playable" ng-click="setSong(song.track)">{{ song.track }}</td>
+                            <td class="playable" ng-dblclick="setSong(song.track)">{{ song.track }}</td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -104,28 +110,18 @@
                 </table>
             </div>
         </div>
-
-
-
-
-        <!--<hr />
-
-        <hr />-->
+    </div>
+    <hr />
+    <div class="container">
         <input id="youtube-download-link" ng-model="youtubeDownloadLink" type="text">
-        <button id="download-youtube" name="download-youtube">Download</button>
-        <!--<div id="amplitude-play-pause" class="amplitude-paused"></div>
-      <span id="amplitude-now-playing-title">Song Name</span> <span id="slash">-</span><br><span id="amplitude-now-playing-artist">Artist</span>-->
-        <!--<audio id="prismatic-audio" amplitude-artist="Amplitude Artist" amplitude-title="Amplitude Title" amplitude-album-art-url="path/to/album-art.jpg" amplitude-album="Ampltude Album" amplitude-audio-type="song">-->
+        <button id="download-youtube" name="download-youtube" ng-click="youtubeDownloadSong()">Download</button>
+        <div>{{ youtubeDownloadInProgress }}</div>
         <audio id="prismatic-audio" controls style="display: none">
-        <!--<audio id="prismatic-audio" controls style="display: none" ng-ontimeupdate="updatePlayTimer(Math.floor(this.currentTime) + ' / ' + Math.floor(this.duration))">-->
-            <source src="{{ youtubeDownloadLink }}" type="audio/mpeg">
+        
+            <source ng-cloak ng-src="{{ currentSong }}" type="audio/mpeg">
             Your browser does not support the audio element.
         </audio>
-        <!--We are using node <script>document.write(process.versions.node)</script>,
-    Chrome <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.-->
     </div>
-    <!--<body>-->
 
 
     <script src="http://localhost:35729/livereload.js"></script>

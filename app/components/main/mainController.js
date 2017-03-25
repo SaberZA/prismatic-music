@@ -1,13 +1,19 @@
 var padLeft = require('pad-left');
 var fs = require('fs');
+var chokidar = require('chokidar');
+var exec = require('child_process').exec;
+
+
+
 
 angular.module('main')
     .controller('mainController', ['$scope', '$timeout', function MainController($scope, $timeout) {
 
         var audio = document.getElementById('prismatic-audio');
+        var watcher = null;
 
         $scope.title = 'Prismatic Player';
-        $scope.youtubeDownloadLink = 'music/anime.mp3';
+        $scope.youtubeDownloadLink = 'https://www.youtube.com/watch?v=gPgLmyWiUDc';
         $scope.songName = "...";
         $scope.currentTimer = "00:00";
         $scope.muted = false;
@@ -17,25 +23,93 @@ angular.module('main')
         $scope.isPlaying = false;
         $scope.progressBarBackgroundStyle = "";
         $scope.songList = [];
+        $scope.primaryFolder = __dirname + '/' + 'music';
+        $scope.youtubeDownloadInProgress = false;
 
 
         var visuals = new Visualizer();
         visuals.ini();
 
-        fs.readdir(__dirname + '/music', function(err, items) {
-            console.log(items);
-
-            for (var i = 0; i < items.length; i++) {
-                console.log(items[i]);
-                $scope.songList.push({
-                    track: items[i]
-                })
+        $scope.$watch('primaryFolder', function(newValue, oldValue) {
+            if (watcher) {
+                watcher.unwatch(oldValue);
             }
+
+            watcher = chokidar.watch(newValue, { ignored: /^\./, persistent: true });
+            watcher
+                .on('add', function(path) {
+                    console.log('File', path, 'has been added');
+                    $scope.addSongToPlaylist(path);
+                    $scope.$apply();
+                })
+                .on('change', function(path) { console.log('File', path, 'has been changed'); })
+                .on('unlink', function(path) {
+                    console.log('File', path, 'has been removed');
+                    $scope.removeSongFromPlaylist(path);
+                    $scope.$apply();
+                })
+                .on('error', function(error) { console.error('Error happened', error); })
         });
 
-        $scope.setSong = function(songName) {
+        $scope.isFormatAvailable = function(fileName) {
+            if (!fileName.endsWith(".mp3")) {
+                return false;
+            }
+            return true;
+        }
 
-            $scope.youtubeDownloadLink = 'music/' + songName;
+        $scope.addSongToPlaylist = function(songPath) {
+            if (!$scope.isFormatAvailable(songPath)) {
+                return;
+            }
+
+            $scope.songList.push({
+                track: songPath
+            });
+        };
+
+        $scope.removeSongFromPlaylist = function(songPath) {
+            if (!$scope.isFormatAvailable(songPath)) {
+                return;
+            }
+
+            var indexToRemove = -1;
+            $scope.songList.forEach(function(songItem, index) {
+                if (songItem.track == songPath) {
+                    indexToRemove = index;
+                }
+            });
+
+            if (indexToRemove > -1) {
+                $scope.songList.splice(indexToRemove, 1);
+            }
+        }
+
+        $scope.youtubeDownloadSong = function() {
+            var cmd = 'youtube-dl.exe --extract-audio --audio-format mp3 --output "' + $scope.primaryFolder + '/%(title)s.%(ext)s" ' + $scope.youtubeDownloadLink;
+            var path = __dirname + '/utils/youtube-dl-win';
+            $scope.youtubeDownloadInProgress = true;
+            var child = exec(
+                cmd, {
+                    cwd: path
+                },
+                function(error, stdout, stderr) {
+                    if (error === null) {
+                        $scope.youtubeDownloadInProgress = false;
+                        console.log('success');
+                        $scope.$apply();
+                    } else {
+                        $scope.youtubeDownloadInProgress = false;
+                        console.log('error');
+                        console.log(error.message);
+                        $scope.$apply();
+                    }
+                }
+            );
+        }
+
+        $scope.setSong = function(songName) {
+            $scope.currentSong = songName;
             $scope.playMusic();
 
         };
@@ -49,7 +123,7 @@ angular.module('main')
             $scope.loadAudio();
             audio.play();
             // }
-            $scope.songName = $scope.youtubeDownloadLink;
+            $scope.songName = $scope.currentSong;
             visuals._visualize();
 
         };

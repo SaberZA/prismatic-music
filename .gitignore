@@ -58,3 +58,4 @@ typings/
 .env
 
 app/music
+.mp3
